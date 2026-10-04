@@ -1,0 +1,180 @@
+/* ─── Design tokens ────────────────────────────────────────────────────────────
+   Shared CSS custom properties consumed across all component stylesheets.
+   ─────────────────────────────────────────────────────────────────────────── */
+
+.editor-shell {
+  --surface: #1b1c1b;
+  --surface-raised: #202120;
+  --line: #343533;
+  --text: #eeedea;
+  --muted: #92938e;
+  --quiet: #676863;
+  --paper: #ebe9e3;
+  --paper-ink: #4a4a46;
+  min-height: 100vh;
+  color: var(--text);
+  background: #171817;
+}
+
+/* ─── Global button reset ──────────────────────────────────────────────────── */
+
+button {
+  cursor: pointer;
+}
+button:disabled {
+  cursor: not-allowed;
+}
+
+/* ─── Utilities ────────────────────────────────────────────────────────────── */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
+
+.hidden-input {
+  display: none;
+}
+
+/* ─── Shared indicator dots ────────────────────────────────────────────────── */
+
+.status-dot,
+.caption-dot {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #8b9a82;
+}
+
+.caption-dot {
+  width: 4px;
+  height: 4px;
+  background: #92938d;
+}
+
+/* ─── Brand mark (shared between topbar & canvas empty state) ──────────────── */
+
+.brand-mark,
+.empty-stamp {
+  display: grid;
+  grid-template-columns: repeat(2, 6px);
+  grid-template-rows: repeat(2, 6px);
+  gap: 2px;
+  width: 16px;
+  height: 16px;
+  transform: rotate(-7deg);
+}
+.brand-mark i,
+.empty-stamp i {
+  background: #d6d4cb;
+  display: block;
+}
+.brand-mark i:nth-child(2),
+.empty-stamp i:nth-child(2) {
+  opacity: 0.64;
+}
+.brand-mark i:nth-child(3),
+.empty-stamp i:nth-child(3) {
+  opacity: 0.78;
+}
+.brand-mark i:nth-child(4),
+.empty-stamp i:nth-child(4) {
+  opacity: 0.4;
+}
+
+/* ─── Shared section heading ───────────────────────────────────────────────── */
+
+.section-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 13px;
+}
+.section-heading h2 {
+  margin: 0;
+  color: #d6d5d0;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+}
+.step-label,
+.photo-count {
+  color: #767771;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+}
+
+/* ─── Shared slider control ────────────────────────────────────────────────── */
+
+.slider-control {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 7px 12px;
+  margin: 13px 0 0;
+  color: #a7a8a2;
+  font-size: 9px;
+}
+.slider-control output {
+  color: #d9d8d2;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+}
+.slider-control output small {
+  color: #777973;
+  font-size: 8px;
+}
+.slider-control input[type="range"] {
+  grid-column: 1 / -1;
+  width: 100%;
+  height: 12px;
+  margin: 0;
+  accent-color: #c7c5bc;
+  cursor: pointer;
+}
+
+/* ─── Helper / descriptive copy ───────────────────────────────────────────── */
+
+.helper-copy {
+  margin: 9px 0 0;
+  color: #787a74;
+  font-size: 9px;
+  line-height: 1.5;
+}
+
+/* ─── Spinner (used in Topbar export button) ───────────────────────────────── */
+
+.spinner {
+  width: 12px;
+  height: 12px;
+  border: 1px solid #686862;
+  border-top-color: #232421;
+  border-radius: 50%;
+  animation: spin 0.7s linear infinite;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ─── Reduced-motion override ──────────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}

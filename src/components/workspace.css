@@ -1,0 +1,459 @@
+/* ─── Workspace shell ──────────────────────────────────────────────────────── */
+
+.workspace {
+  display: flex;
+  min-width: 0;
+  min-height: calc(100vh - 66px);
+  flex-direction: column;
+  background: #202120;
+}
+
+/* ─── Workspace toolbar ────────────────────────────────────────────────────── */
+
+.workspace-toolbar {
+  display: flex;
+  height: 50px;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 25px;
+  border-bottom: 1px solid #30312f;
+  color: #a3a49d;
+  font-size: 9px;
+}
+.workspace-title,
+.workspace-tools {
+  display: inline-flex;
+  align-items: center;
+  gap: 11px;
+}
+.workspace-label {
+  color: #777872;
+  font-size: 8px;
+}
+.workspace-divider,
+.canvas-size-divider {
+  color: #5f605a;
+}
+.canvas-size-label,
+.zoom-label {
+  color: #999a94;
+  font-family: "DM Mono", monospace;
+  font-size: 9px;
+}
+.zoom-label {
+  color: #70716c;
+}
+
+/* ─── Stage scroll container ───────────────────────────────────────────────── */
+
+.stage-scroll {
+  display: flex;
+  flex: 1;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  overflow: auto;
+  padding: 28px 36px 20px;
+}
+.stage-wrap {
+  position: relative;
+  width: min(100%, 480px);
+  flex: 0 1 auto;
+}
+
+/* ─── Collage stage ────────────────────────────────────────────────────────── */
+
+.collage-stage {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  container-type: size;
+  background: var(--paper);
+  box-shadow:
+    0 19px 50px #11120f55,
+    0 2px 7px #11120f3b;
+  touch-action: none;
+  transition:
+    outline-color 0.15s ease,
+    box-shadow 0.15s ease;
+}
+.collage-stage.dragging-over {
+  outline: 2px solid #d6d4cb;
+  outline-offset: 5px;
+}
+
+/* ─── Grid cells ───────────────────────────────────────────────────────────── */
+
+.grid-cell {
+  position: absolute;
+}
+.grid-image,
+.empty-slot {
+  display: block;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  padding: 0;
+  border: 0;
+  background: #d9d7d0;
+}
+.grid-image {
+  outline: 0;
+  border-radius: var(--frame-radius);
+  cursor: grab;
+  touch-action: none;
+}
+.grid-image:active {
+  cursor: grabbing;
+}
+.grid-image::after {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  border: var(--frame-border-width) solid var(--frame-border-color);
+  border-radius: inherit;
+  content: "";
+  pointer-events: none;
+}
+.grid-image.image-selected {
+  z-index: 1;
+  outline: 1px solid #464743;
+  outline-offset: -1px;
+}
+.empty-slot {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  color: #888780;
+  background: #e5e3dc;
+  transition: background 0.15s ease;
+}
+.empty-slot:hover {
+  background: #dcdad3;
+}
+.empty-slot > span {
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 1;
+}
+.empty-slot small {
+  font-size: 8px;
+}
+
+/* ─── Free-form images ─────────────────────────────────────────────────────── */
+
+.free-image {
+  position: absolute;
+  box-sizing: border-box;
+  cursor: grab;
+  touch-action: none;
+  user-select: none;
+  -webkit-user-select: none;
+  border: var(--frame-border-width) solid var(--frame-border-color);
+  border-radius: var(--frame-radius);
+  box-shadow: 0 2px 8px #29292524;
+}
+.free-image:active {
+  cursor: grabbing;
+}
+.crop-mode .free-image,
+.crop-mode .grid-image {
+  cursor: move;
+}
+.crop-mode .free-image:active,
+.crop-mode .grid-image:active {
+  cursor: grabbing;
+}
+.free-image.image-selected {
+  z-index: 2;
+}
+
+/* ─── Image window (shared) ────────────────────────────────────────────────── */
+
+.image-window {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.free-image .image-window {
+  inset: var(--frame-border-width);
+  border-radius: calc(var(--frame-radius) - var(--frame-border-width));
+}
+.image-window img {
+  position: absolute;
+  inset: 0;
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+/* ─── Selection & transform handles ───────────────────────────────────────── */
+
+.selection-outline {
+  position: absolute;
+  inset: -2px;
+  border: 1px solid #f1eee5;
+  border-radius: inherit;
+  pointer-events: none;
+}
+.transform-handle {
+  position: absolute;
+  z-index: 2;
+  display: grid;
+  width: 22px;
+  height: 22px;
+  place-items: center;
+  border: 1px solid #373833;
+  border-radius: 50%;
+  color: #353631;
+  background: #f0eee7;
+  box-shadow: 0 1px 4px #0004;
+  touch-action: none;
+}
+.rotate-handle {
+  top: -34px;
+  left: 50%;
+  transform: translateX(-50%);
+  cursor: grab;
+}
+.rotate-handle::after {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  height: 13px;
+  border-left: 1px solid #f1eee5;
+  content: "";
+}
+.rotate-handle svg {
+  width: 11px;
+  height: 11px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+.scale-handle {
+  right: -11px;
+  bottom: -11px;
+  cursor: nwse-resize;
+}
+.scale-handle > span {
+  width: 6px;
+  height: 6px;
+  border: 1px solid currentColor;
+  border-radius: 1px;
+}
+
+/* ─── Empty canvas state ───────────────────────────────────────────────────── */
+
+.stage-empty-copy {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  display: flex;
+  width: 85%;
+  flex-direction: column;
+  align-items: center;
+  transform: translate(-50%, -50%);
+  color: #77766f;
+  text-align: center;
+  pointer-events: none;
+}
+.empty-stamp {
+  width: 24px;
+  height: 24px;
+  grid-template-columns: repeat(2, 9px);
+  grid-template-rows: repeat(2, 9px);
+  gap: 3px;
+  margin-bottom: 14px;
+}
+.stage-empty-copy strong {
+  color: #565650;
+  font-size: clamp(13px, 2cqw, 19px);
+  font-weight: 500;
+  letter-spacing: -0.04em;
+}
+.stage-empty-copy > span:not(.empty-stamp) {
+  margin-top: 6px;
+  font-size: clamp(8px, 1.1cqw, 10px);
+}
+.stage-empty-copy button {
+  margin-top: 15px;
+  padding: 7px 10px;
+  border: 1px solid #bdbbb3;
+  border-radius: 2px;
+  color: #53534e;
+  background: #e8e6df;
+  font-size: clamp(8px, 1.1cqw, 10px);
+  pointer-events: auto;
+}
+.stage-empty-copy button:hover {
+  background: #f2f0e9;
+}
+.stage-empty-copy button span {
+  margin-left: 8px;
+}
+
+/* ─── Drop overlay ─────────────────────────────────────────────────────────── */
+
+.drop-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 10;
+  display: grid;
+  place-items: center;
+  border: 1px dashed #77786f;
+  color: #373832;
+  background: #ebe9e3dd;
+  pointer-events: none;
+}
+.drop-overlay span {
+  padding: 10px 13px;
+  border: 1px solid #b5b3ab;
+  background: #f1efe9;
+  font-size: 11px;
+}
+
+/* ─── Stage guides ─────────────────────────────────────────────────────────── */
+
+.stage-guides {
+  position: absolute;
+  inset: -9px;
+  z-index: 0;
+  pointer-events: none;
+}
+.guide {
+  position: absolute;
+  display: block;
+  background: #494a45;
+}
+.guide-top,
+.guide-bottom {
+  left: 7px;
+  right: 7px;
+  height: 1px;
+}
+.guide-top {
+  top: 0;
+}
+.guide-bottom {
+  bottom: 0;
+}
+.guide-left,
+.guide-right {
+  top: 7px;
+  bottom: 7px;
+  width: 1px;
+}
+.guide-left {
+  left: 0;
+}
+.guide-right {
+  right: 0;
+}
+
+/* ─── Stage caption & footnote ─────────────────────────────────────────────── */
+
+.stage-caption {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 14px;
+  color: #92938d;
+  font-size: 9px;
+}
+.stage-caption > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.workspace-footnote {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 24px;
+  border-top: 1px solid #30312f;
+  color: #696a65;
+  font-family: "DM Mono", monospace;
+  font-size: 7px;
+  letter-spacing: 0.08em;
+}
+
+/* ─── Toast notification ───────────────────────────────────────────────────── */
+
+.toast {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 20;
+  display: flex;
+  max-width: min(420px, calc(100vw - 40px));
+  align-items: center;
+  gap: 18px;
+  padding: 12px 14px;
+  border: 1px solid #55423f;
+  color: #e1d4d0;
+  background: #322724;
+  box-shadow: 0 8px 30px #0005;
+  font-size: 11px;
+  line-height: 1.5;
+}
+.toast button {
+  padding: 0;
+  border: 0;
+  color: #c5b6b1;
+  background: transparent;
+  font-size: 17px;
+}
+
+/* ─── Responsive ───────────────────────────────────────────────────────────── */
+
+@media (min-width: 1280px) {
+  .stage-wrap {
+    width: min(100%, 530px);
+  }
+}
+@media (max-width: 760px) {
+  .workspace {
+    min-height: 72vh;
+  }
+  .workspace-toolbar {
+    padding: 0 16px;
+  }
+  .stage-scroll {
+    min-height: 56vh;
+    padding: 32px 32px 25px;
+  }
+  .stage-wrap {
+    width: min(100%, 440px);
+  }
+}
+@media (max-width: 460px) {
+  .workspace-toolbar {
+    height: 44px;
+  }
+  .workspace-title {
+    gap: 7px;
+    font-size: 8px;
+  }
+  .canvas-size-label,
+  .zoom-label {
+    font-size: 8px;
+  }
+  .workspace-footnote {
+    padding: 10px 14px;
+    font-size: 6px;
+  }
+  .stage-scroll {
+    min-height: 53vh;
+    padding: 30px 27px 23px;
+  }
+}
